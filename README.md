@@ -1,8 +1,8 @@
 Link to edit the .tex file with the report: https://pt.sharelatex.com/1335567134sxggmcgtcwzv
 
-To run scripts in python using pyspark use PYTHONSTARTUP=name_of_file.py pyspark
+To run scripts in python using pyspark use: PYTHONSTARTUP=name_of_file.py pyspark
 
-#BDP-05-Large-scale-Clustering
+To understand the database: https://ia800500.us.archive.org/22/items/stackexchange/readme.txt
 
 # BDP 05: CLUSTERING OF LARGE UNLABELED DATASETS
 Overview
