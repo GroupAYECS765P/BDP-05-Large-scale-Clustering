@@ -1,6 +1,6 @@
 Link to edit the .tex file with the report: https://pt.sharelatex.com/1335567134sxggmcgtcwzv
 
-To run scripts in python using pyspark use: PYTHONSTARTUP=name_of_file.py pyspark
+To run scripts in python using pyspark use: spark-submit name_of_file.py
 
 To understand the database: https://ia800500.us.archive.org/22/items/stackexchange/readme.txt
 
