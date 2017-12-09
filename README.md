@@ -1,3 +1,5 @@
+Link to download the Kmeans Vectors to test the Kmeans Algorithm: https://drive.google.com/file/d/1u6zbtPPTc89lJrkaO13t0wADKYCrDG0T/view?usp=sharing
+
 Link to edit the .tex file with the report: https://pt.sharelatex.com/1335567134sxggmcgtcwzv
 
 To run scripts in python using pyspark use: spark-submit name_of_file.py
