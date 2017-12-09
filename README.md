@@ -1,8 +1,12 @@
 Link to download the Kmeans Vectors Folder to test the Kmeans Algorithm: 
 https://drive.google.com/open?id=1pCZzJwPR8UnRA6gVCGOawOo-_XkopxN_
+
 KmeansVector file contains the output vectors from Spark
+
 KmeansVec file contains a more readble version since you can slipt just by ','
+
 plotData file contains a clusterised data (using MLlib) with 40 clusters and 10 max iterations, the third columm is the cluster of the data in the same line.
+=============
 
 Link to edit the .tex file with the report: https://pt.sharelatex.com/1335567134sxggmcgtcwzv
 
