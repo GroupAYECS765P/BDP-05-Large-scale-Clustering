@@ -1,6 +1,6 @@
 Link to download the Kmeans Vectors Folder to test the Kmeans Algorithm:
 
-https://drive.google.com/open?id=1pCZzJwPR8UnRA6gVCGOawOo-_XkopxN_
+https://goo.gl/iTUyrM
 
 KmeansVector file contains the output vectors from Spark
 
