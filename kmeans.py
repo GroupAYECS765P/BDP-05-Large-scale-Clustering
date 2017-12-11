@@ -2,6 +2,8 @@ from pyspark import SparkContext, SparkConf
 import re
 import numpy as np
 import copy as cp
+import itertools
+import operator
 
 # The K Means Methods
 langSpread = 100000 # K-means parameter: How 'far apart' languages should be for the kmeans algorithm?
@@ -25,12 +27,9 @@ def kmeans(means, vectors, iter=1):
     # Update the array means.
     newMeans = cp.copy(means)
     centroids = vectors.map(lambda v: (findClosest(v, means), v)).groupByKey().mapValues(lambda vs: averageVectors(vs)).collect()
-    
     for i, centroid in centroids:
         newMeans[i] = centroid
-
     distance = euclideanDistanceArray(means, newMeans)
-
     if converged(distance):
         return newMeans
     elif iter < kmeansMaxIterations:
@@ -101,6 +100,8 @@ def pyMaxBy(dictMap):
 # Displaying results
 def clusterResults(means, vectors):
     closest = vectors.map(lambda p: (findClosest(p, means), p))
+    inmem0 = closest.persist()
+    inmem0.saveAsTextFile('coursework2/closest')
     closestGrouped = closest.groupByKey()
     median = closestGrouped.mapValues(lambda vs: calMedian(vs))
     return sorted([v for k,v in median.collect()], key=lambda x: x[3])
@@ -139,11 +140,11 @@ vectors = lines.map(lambda line: np.array([float(x) for x in line.split(',')]))
 
 means = kmeans(sampleVectors(vectors), vectors, 1)
 
-inmem1 = means.persist()
+inmem1 = sc.parallelize(means)
 inmem1.saveAsTextFile('coursework2/means')
 
 results = clusterResults(means, vectors)
-inmem2 = results.persist()
+inmem2 = sc.parallelize(results)
 inmem2.saveAsTextFile('coursework2/results')
 
 printResults(results)
