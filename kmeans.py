@@ -33,7 +33,7 @@ def kmeans(means, vectors, iter=1):
     if converged(distance):
         return newMeans
     elif iter < kmeansMaxIterations:
-        kmeans(newMeans, vectors, iter + 1)
+        return kmeans(newMeans, vectors, iter + 1)
     else:
         print('Reached max iterations!')
         return newMeans
