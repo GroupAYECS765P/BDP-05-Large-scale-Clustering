@@ -19,10 +19,10 @@ conf = SparkConf().setAppName("Large-Scale Clustering")
 sc = SparkContext(conf=conf)
 sqlCtx = SQLContext(sc)
 
-def is_user_with_location( xmlStr ):
+def is_user_with_age( xmlStr ):
     try:
         xmlObj = ET.fromstring(xmlStr)
-        return 'Reputation' in xmlObj.attrib and 'Id' in xmlObj.attrib and 'Location' in xmlObj.attrib
+        return 'Reputation' in xmlObj.attrib and 'Id' in xmlObj.attrib and 'Age' in xmlObj.attrib
     except:
         return False
 
@@ -54,7 +54,7 @@ def get_age( xmlStr ):
 records = sc.textFile("/data/stackOverflow2017")
 
 # FILTERING STAGE
-users = records.filter(is_user_with_location)
+users = records.filter(is_user_with_age)
 answers = records.filter(is_valid_answer)
 
 # MAPPING STAGEt
@@ -76,4 +76,4 @@ def get_plot_data ( input_data , kmeans_model):
 
 plot_data = kmeans_vector.values().map(lambda data : get_plot_data(data, clusters))
 
-plot_data.saveAsTextFile('dataPlot')
+plot_data.saveAsTextFile('dataPlotAge')
