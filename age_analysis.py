@@ -72,8 +72,8 @@ clusters = KMeans.train(kmeans_vector.values(), CLUSTERS_NUMBER, maxIterations=1
 # PLOTTING ORGANIZATION STAGE
 def get_plot_data ( input_data , kmeans_model):
     result = kmeans_model.predict(input_data)
-    return [input_data, result]
+    return list(input_data).append(result)
 
-plot_data = kmeans_vector.values().map(lambda data : get_plot_data(data, clusters))
+plot_data = kmeans_vector.map(lambda data : get_plot_data(data, clusters))
 
 plot_data.saveAsTextFile('dataPlotAge')
