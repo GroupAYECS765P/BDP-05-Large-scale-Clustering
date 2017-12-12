@@ -24,7 +24,7 @@ def kmeans(means, vectors, iter=1):
     if converged(distance):
         return newMeans
     elif iter < kmeansMaxIterations:
-        kmeans(newMeans, vectors, iter + 1)
+        return kmeans(newMeans, vectors, iter + 1)
     else:
         print('Reached max iterations!')
         return newMeans
@@ -127,7 +127,7 @@ def printResults(results):
 conf = SparkConf().setAppName('Large-Scale Clustering').set('spark.hadoop.validateOutputSpecs', 'false')
 sc = SparkContext(conf = conf)
 
-lines = sc.textFile('coursework2/support_vector_200.txt')
+lines = sc.textFile('coursework2/support_vector.txt')
 userIdVectors = lines.map(lambda line: eval(line))
 vectors = lines.map(lambda line: np.array([float(x) for x in eval(line)[1]]))
 
