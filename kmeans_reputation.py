@@ -130,6 +130,7 @@ sc = SparkContext(conf = conf)
 lines = sc.textFile('coursework2/support_vector.txt')
 userIdVectors = lines.map(lambda line: eval(line))
 vectors = lines.map(lambda line: np.array([float(x) for x in eval(line)[1]]))
+vectors.persist()
 
 means = kmeans(sampleVectors(vectors), vectors, 1)
 
@@ -139,7 +140,7 @@ inmem1.saveAsTextFile('coursework2/support_means')
 results = clusterResults(means, userIdVectors)
 inmem2 = sc.parallelize(results)
 inmem2.saveAsTextFile('coursework2/support_results')
-#
+
 printResults(results)
 
 sc.stop()
