@@ -137,6 +137,7 @@ sc = SparkContext(conf = conf)
 
 lines = sc.textFile('coursework2/kmeansVec.txt')
 vectors = lines.map(lambda line: np.array([float(x) for x in line.split(',')]))
+vectors.persist()
 
 means = kmeans(sampleVectors(vectors), vectors, 1)
 
