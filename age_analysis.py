@@ -39,8 +39,7 @@ def is_valid_answer( xmlStr ):
 
 def get_reputation( xmlStr ):
     xmlObj = ET.fromstring(xmlStr)
-    return (xmlObj.attrib['Id'], int(xmlObj.attrib['Reputation']))
-
+    return (xmlObj.attrib['Age'], int(xmlObj.attrib['Reputation']))
 
 def get_user_answer(xmlStr):
     xmlObj = ET.fromstring(xmlStr)
@@ -51,29 +50,40 @@ def get_age( xmlStr ):
     return (xmlObj.attrib['Id'], xmlObj.attrib['Age'])
 
 
-records = sc.textFile("/data/stackOverflow2017")
+users = sc.textFile("/data/stackOverflow2017/Users.xml")
+posts = sc.textFile("/data/stackOverflow2017/Posts.xml")
 
 # FILTERING STAGE
-users = records.filter(is_user_with_age)
-answers = records.filter(is_valid_answer)
+valid_users = users.filter(is_user_with_age)
+answers = posts.filter(is_valid_answer)
 
-# MAPPING STAGEt
-user_vector = users.map(get_reputation)
+# MAPPING STAGE
+ #[userId, age]
+user_age = valid_users.map(get_age)
+#[age, reputation]
+reputation_vector = valid_users.map(get_reputation)\
+    .mapValues(lambda v: (v, 1))\
+    .reduceByKey(lambda a,b: (a[0]+b[0], a[1]+b[1]))\
+    .mapValues(lambda v: v[0]/v[1])
+#[userId, answerCount]
 answer_count_vector = answers.map(get_user_answer).reduceByKey(lambda a, b : a+b)
-user_age = users.map(get_age)
+#[age, answerCount]
+age_answer = user_age.join(answer_count_vector).map(lambda l : (l[1]))
+age_answer = age_answer.mapValues(lambda v: (v, 1))\
+    .reduceByKey(lambda a,b: (a[0]+b[0], a[1]+b[1]))\
+    .mapValues(lambda v: v[0]/v[1])
 
 # INNER JOIN OF THE RDDS
-data_vector = answer_count_vector.join(user_vector).persist()
-kmeans_vector = data_vector.join(user_age).map(lambda l : (l[1][1], l[1][0])).reduceByKey(lambda a, b : [a[0]+b[0], a[1]+b[1]] )
+data_vector = reputation_vector.join(age_answer) #(age, [mean reputation, mean answercount] )
 
 # K-MEANS STAGE
-clusters = KMeans.train(kmeans_vector.values(), CLUSTERS_NUMBER, maxIterations=10, initializationMode="random")
+clusters = KMeans.train(data_vector.values(), CLUSTERS_NUMBER, maxIterations=10, initializationMode="random")
 
 # PLOTTING ORGANIZATION STAGE
 def get_plot_data ( input_data , kmeans_model):
     result = kmeans_model.predict(input_data)
-    return list(input_data).append(result)
+    return [input_data  , result]
 
-plot_data = kmeans_vector.map(lambda data : get_plot_data(data, clusters))
+plot_data = data_vector.map(lambda data : [data[0], get_plot_data(data[1], clusters)])
 
 plot_data.saveAsTextFile('dataPlotAge')
